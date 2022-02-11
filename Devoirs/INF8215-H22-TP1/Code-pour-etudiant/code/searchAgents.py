@@ -10,7 +10,12 @@
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
 # Student side autograding was added by Brad Miller, Nick Hay, and
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
-
+################################################################################
+################################# AUTHOR #######################################
+######################### Sanmar SIMON 1938126 #################################
+######################### Ghali Harti 1953494  #################################
+################################################################################
+################################################################################
 
 """
 This file contains all of the agents that can be selected to control Pacman.  To
@@ -40,6 +45,7 @@ Good luck and happy searching!
 from game import Directions
 from game import Agent
 from game import Actions
+from pacman import GameState
 import util
 import time
 import search
@@ -305,8 +311,7 @@ class CornersProblem(search.SearchProblem):
         '''
             INSÉREZ VOTRE SOLUTION À LA QUESTION 5 ICI
         '''
-        top, right = self.walls.height-2, self.walls.width-2
-        startState = (self.startingPosition, ((1,1), (1,top), (right, 1), (right, top)))
+        startState = (self.startingPosition, self.corners)
         return startState
 
     def isGoalState(self, state):
@@ -316,6 +321,8 @@ class CornersProblem(search.SearchProblem):
 
         '''
             INSÉREZ VOTRE SOLUTION À LA QUESTION 5 ICI
+            L'état est un objectif si il ne reste aucun coin non visité OU si la position actuelle est
+            le dernier coin non visité
         '''
         return len(state[1]) == 0 or (len(state[1]) == 1 and state[0] in state[1])
 
@@ -345,7 +352,6 @@ class CornersProblem(search.SearchProblem):
                 nextState = ((nextx, nexty),remainingCorners)
                 cost = self.getCostOfActions([action])
                 successors.append((nextState, action, cost))
-
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
@@ -382,8 +388,29 @@ def cornersHeuristic(state, problem):
     '''
         INSÉREZ VOTRE SOLUTION À LA QUESTION 6 ICI
     '''
-    
-    return 0
+
+    # Stratégie choisie : On commence par trouver le coin le plus proche de la position actuelle (Distance Manhattan)
+    # Ce coin est alors supprimé de la liste des coins restants et est considéré comme atteint et comme position actuelle
+    # On recommence avec le prochain coin le plus proche de la position actuelle
+    # On recommence jusqu'à ce que la liste des coins restants soit vide
+
+    # find the nearest corner   (x,y)
+    currentPos = state[0]
+    remainingCorners = state[1]
+    nearestCorner = None
+    totalDistance = 0
+    for corner in remainingCorners:
+        min = float('inf')
+        for corner in remainingCorners: # Recherche du coin le plus proche de la position actuelle
+            distance = util.manhattanDistance(currentPos, corner)
+            if distance < min:
+                min = distance
+                nearestCorner = corner
+        totalDistance += util.manhattanDistance(currentPos, nearestCorner)
+        currentPos = nearestCorner
+        remainingCorners = tuple(filter(lambda x: x != nearestCorner, remainingCorners))
+    return totalDistance
+
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -480,7 +507,15 @@ def foodHeuristic(state, problem: FoodSearchProblem):
     '''
         INSÉREZ VOTRE SOLUTION À LA QUESTION 7 ICI
     '''
-
-
-    return 0
-
+    foodList = foodGrid.asList()
+    distPositionToFood = [0]
+    
+    # Solution 5/5
+    for food in foodList:
+        if (position,food) in problem.heuristicInfo:
+            distPositionToFood.append(problem.heuristicInfo[(position,food)])
+        else:
+            prob = PositionSearchProblem(problem.startingGameState, costFn = lambda x: 1, goal=food, start=position, warn=False, visualize=False)
+            problem.heuristicInfo[(position,food)] = len(search.bfs(prob))  # Chaque action coûte 1
+            distPositionToFood.append(problem.heuristicInfo[(position,food)])
+    return max(distPositionToFood)  # On retourne la distance réelle (bfs) entre notre position et le food le plus loin

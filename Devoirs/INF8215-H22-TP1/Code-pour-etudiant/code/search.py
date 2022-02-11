@@ -10,7 +10,12 @@
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
 # Student side autograding was added by Brad Miller, Nick Hay, and
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
-
+################################################################################
+################################# AUTHOR #######################################
+######################### Sanmar SIMON 1938126 #################################
+######################### Ghali Harti 1953494  #################################
+################################################################################
+################################################################################
 
 """
 In search.py, you will implement generic search algorithms which are called by
