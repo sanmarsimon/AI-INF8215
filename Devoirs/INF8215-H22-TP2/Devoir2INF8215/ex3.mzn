@@ -1,5 +1,6 @@
 %-Attribution de taches-
 
+%Utiliser solver COIN-BC
 include "globals.mzn";
 
 array[1..N,1..S] of int: cost;%cout d'une tache dependamment du sous-traitant
@@ -9,11 +10,20 @@ int: S;%nombre de sous-traitants
 int: N;%nombre de tâches
 int: T;%horizon temporel, en jours
 
-% array[<A COMPLETER>] of var <A COMPLETER>: x;
+%Tableau dont l'indice est une tache et la valeur est le sous-traitant assossié à la tache
+array[1..N] of var 1..S: x;
 
-% var int: C = <A COMPLETER>;
+%Sous-traitant tache 1 et tache 2 ne peuvent s'occupper d'aucune autre tache
+constraint x[1] != x[2];
+constraint forall(t in 3..N)(x[t] != x[1] /\ x[t] != x[2]);
 
-% <A COMPLETER>
+% attribution des tâches doit respecter l’horizon temporel fixé T
+constraint forall(s in 1..S)(sum(t in 1..N)(if x[t] == s then duration[t,s] else 0 endif) <= T);
+
+%Somme des coûts
+var int: C = sum(t in 1..N, s in 1..S)(if x[t] == s then duration[t,s] else 0 endif);
+
+solve minimize C;
 
 output [
   "x: ", show(x), "\n",
