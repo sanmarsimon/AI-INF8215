@@ -14,3 +14,4 @@ solve minimize x[5]^2;
 output [
   show(x)
 ];
+% Les 4 entiers sont 17, 14, 12, et 10 tel que 17^2 + 14^2 + 12^2 + 10^2 = 27^2

@@ -68,3 +68,8 @@ output [
   "married : ", show(married), "\n",
 ]
 ;
+% Pierre et Elisabeth sont mariés ensemble depuis 10 ans, ce sont les Dupont
+% Edouard et Emilie sont mariés ensemble depuis 25ans, ce sont les Tremblay
+% David et Manon sont mariés ensemble depuis 5 ans, ce sont les Durand
+% Charles et Maria sont mariés ensemble depuis 30 ans, ce sont les Gagnon
+% Remy et Juliette sont mariés ensemble depuis 20 ans, ce sont les Petit
