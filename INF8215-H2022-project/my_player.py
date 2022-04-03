@@ -743,7 +743,7 @@ class MyAgent(Agent):
             return random.choice(initial_board.get_actions(player))
 
     def get_maximum_time_to_spend(self, step, time_left):
-        MAXIMUM_STEPS_IN_GAME = 35
+        MAXIMUM_STEPS_IN_GAME = 40
         player_action_no = (step + 1) // 2
         if player_action_no < 6:
             return player_action_no
