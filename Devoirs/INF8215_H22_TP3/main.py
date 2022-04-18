@@ -4,6 +4,7 @@ import csv
 
 from bean_testers import RandomBeanTester
 from my_bean_tester import MyBeanTester
+import os 
 
 BEANS = ['SIRA','HOROZ','DERMASON','BARBUNYA','CALI','BOMBAY','SEKER']
 
@@ -90,6 +91,9 @@ def main():
 
 
 if __name__ == '__main__':
+    print("CURRENT DIR : ")
+    print(os.listdir(os.curdir))
+    
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--train_file", type=str, required=False,

@@ -1,21 +1,38 @@
 """
 Team:
-<<<<< TEAM NAME >>>>>
+<<<<< Ghali Harti >>>>>
 Authors:
-<<<<< NOM COMPLET #1 - MATRICULE #1 >>>>>
-<<<<< NOM COMPLET #2 - MATRICULE #2 >>>>>
+<<<<< Ghali Harti - 1953494 >>>>>
+<<<<< Sanmar Simon - MATRICULE #2 >>>>>
 """
 
 BEANS = ['SIRA','HOROZ','DERMASON','BARBUNYA','CALI','BOMBAY','SEKER']
 
 from bean_testers import BeanTester
-
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
 
 class MyBeanTester(BeanTester):
     def __init__(self):
         # TODO: initialiser votre modèle ici:
+        self.model = RandomForestClassifier(random_state=10, n_estimators=100, ccp_alpha=4e-5)
         pass
 
+    def preprocess_y(self, y_raw):
+        classes_dic = {class_name:i for i,class_name in enumerate(BEANS)}
+        y = []
+        for row in y_raw:
+            y.append(classes_dic[row[1]])
+        return y
+    
+    def preprocess_x(self, x_raw):
+        x = []
+        for row in x_raw:
+            x.append(row[2:])
+        return x
+        
     def train(self, X_train, y_train):
         """
         train the current model on train_data
@@ -28,8 +45,10 @@ class MyBeanTester(BeanTester):
                 the first column is the example ID.
                 the second column is the example label.
         """
-        # TODO: entrainer un modèle sur X_train & y_train
-        raise NotImplementedError()
+        
+        x = self.preprocess_x(X_train)
+        y = self.preprocess_y(y_train)
+        return self.model.fit(x,y)
 
     def predict(self, X_data):
         """
@@ -47,5 +66,12 @@ class MyBeanTester(BeanTester):
                 the first column is the example ID.
         :return: a 2D list of predictions with 2 columns: ID and prediction
         """
-        # TODO: make predictions on X_data and return them
-        raise NotImplementedError()
+        x = self.preprocess_x(X_data)
+        y_predicted = self.model.predict(x)
+        
+        y_labeled = []
+        for i in range(len(X_data)):
+            y_labeled.append([X_data[i][0], y_predicted[i]])
+        return y_labeled
+        
+        
