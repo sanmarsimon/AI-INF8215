@@ -20,13 +20,9 @@ from __future__ import annotations
 import traceback
 from time import time
 from Tree import Tree
-
 from CustomBoard import CustomBoard
-import heapq
-import random
 from quoridor import *
-from math import log, sqrt
-from typing import List, Tuple
+
 
 class MyAgent(Agent):
     """My Quoridor agent."""
